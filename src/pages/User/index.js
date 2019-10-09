@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
 
 import api from '../../services/api';
 
-// import { Container } from './styles';
+import {
+  Container,
+  Header,
+  Avatar,
+  Name,
+  Bio,
+  Stars,
+  Starred,
+  OwnerAvatar,
+  Info,
+  Title,
+  Author,
+} from './styles';
 
 export default class User extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -27,9 +38,33 @@ export default class User extends Component {
   }
 
   render() {
+    const { navigation } = this.props;
     const { stars } = this.state;
+    const user = navigation.getParam('user');
 
-    return <View />;
+    return (
+      <Container>
+        <Header>
+          <Avatar source={{ uri: user.avatar }} />
+          <Name>{user.name}</Name>
+          <Bio>{user.bio}</Bio>
+        </Header>
+
+        <Stars
+          data={stars}
+          keyExtractor={repo => String(repo.id)}
+          renderItem={({ item: repo }) => (
+            <Starred>
+              <OwnerAvatar source={{ uri: repo.owner.avatar_url }} />
+              <Info>
+                <Title>{repo.name}</Title>
+                <Author>{repo.owner.login}</Author>
+              </Info>
+            </Starred>
+          )}
+        />
+      </Container>
+    );
   }
 }
 
